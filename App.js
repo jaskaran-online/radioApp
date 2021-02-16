@@ -1,6 +1,7 @@
 import React,{ useState } from 'react';
 // eslint-disable-next-line prettier/prettier
-import { StyleSheet, Text, SafeAreaView, View, Image, ToastAndroid, Pressable } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, View, Image, ToastAndroid, Pressable,Animated,
+  Easing, } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -41,10 +42,30 @@ const App = () => {
   const [title, setTitle] = useState(readioMirchi.title);
   const [artWork, setArtWork] = useState(readioMirchi.artwork);
   const [artist, setArtist] = useState(readioMirchi.artist);
-  
+  const [isSongPlay, setStatus] = useState(false);
+
   const showToast = (message) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
+
+  let rotateValueHolder = new Animated.Value(0);
+
+  const startImageRotateFunction = () => {
+    rotateValueHolder.setValue(0);
+    Animated.timing(rotateValueHolder, {
+      toValue: 1,
+      duration: 3000,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start(() => startImageRotateFunction());
+  };
+
+  const rotateData = rotateValueHolder.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+  
+  isSongPlay ? '' : startImageRotateFunction();
 
   return (
     <SafeAreaView>
@@ -55,8 +76,8 @@ const App = () => {
 
             <FontAwesome size={35} name="list-alt" color="white" />
             <Pressable onPress={() => {
-              showToast("Radio Stop");
               TrackPlayer.stop();
+              setStatus(false);
             }}>
               <FontAwesome size={35} name="stop-circle" color="white" />
             </Pressable>
@@ -70,7 +91,13 @@ const App = () => {
         <View style={styles.body}>
           <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-evenly' }}>
             <View style={{ alignItems: 'center', justifyContent: 'center', height: 200, width: 200, overflow: 'hidden', borderRadius: 100 }}>
-              <Image
+              <Animated.Image
+
+                style={{
+                  width: 200,
+                  height: 200,
+                  transform: [{rotate: rotateData}],
+                }}
                 source={{
                   height: 200,
                   width: 200,
@@ -81,7 +108,7 @@ const App = () => {
             <View style={{ alignItems: 'center' }}>
               <Text style={{ color: 'white', fontSize: 40, fontWeight: 'bold' }}>{ title }</Text>
               <Text style={{ color: 'white', fontSize: 20, }}>{artist} FM</Text>
-              <Text style={{ color: 'white', fontSize: 15, }}>Playing Now</Text>
+              <Text style={{ color: 'white', fontSize: 15, }}>{ isSongPlay ? "Paused" : "Playing Now" }</Text>
             </View>
           </View>
         </View>
@@ -105,11 +132,7 @@ const App = () => {
           </Pressable>
 
           <Pressable onPress={async () => {
-            let state = await TrackPlayer.getState();
-            showToast('Start Playing Radio');
-            TrackPlayer.play();
-
-            console.log(state);
+            isSongPlay ? TrackPlayer.play() : TrackPlayer.pause();
 
             let trackId = await TrackPlayer.getCurrentTrack();
             let currentTrack = await TrackPlayer.getTrack(trackId);
@@ -117,12 +140,13 @@ const App = () => {
             setArtWork(currentTrack.artwork);
             setTitle(currentTrack.title);
             setArtist(currentTrack.artist);
+            setStatus(!isSongPlay);
           }}>
 
-            <FontAwesome size={60} name="pause-circle" color="white" />
+            <FontAwesome size={60} name={ (isSongPlay) ? "play-circle" : "pause-circle" }  color="white" />
           </Pressable>
           <Pressable onPress={ async () => {
-            showToast('Playing Next Radio');
+
             TrackPlayer.skipToNext();
 
             let trackId = await TrackPlayer.getCurrentTrack();
