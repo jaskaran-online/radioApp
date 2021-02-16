@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState } from 'react';
 // eslint-disable-next-line prettier/prettier
 import { StyleSheet, Text, SafeAreaView, View, Image, ToastAndroid, Pressable } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
@@ -10,7 +10,7 @@ var readioMirchi = {
   url: 'https://radioindia.net/radio/mirchi98/icecast.audio', // Load media from the network
 
   title: 'Radio Mirchi',
-  artist: 'Radio Mirchi',
+  artist: '98.3',
   album: 'Radio Mirchi',
   genre: 'Progressive House, Electro House',
   date: '2014-05-20T07:00:00+00:00', // RFC 3339
@@ -23,7 +23,7 @@ var bigFm = {
   url: 'https://radioindia.net/radio/sc-bb/icecast.audio', // Load media from the network
 
   title: 'Big Fm',
-  artist: 'Big Fm',
+  artist: '92.7',
   album: 'Big Fm',
   genre: 'Progressive House, Electro House',
   date: '2014-05-20T07:00:00+00:00', // RFC 3339
@@ -32,12 +32,16 @@ var bigFm = {
 };
 
 TrackPlayer.add([readioMirchi, bigFm]).then(function () {
-  // The tracks were added
-  console.log('Song Added');
+  // The tracks were added 
+   console.log('Tracks Added');
 });
 
 const App = () => {
 
+  const [title, setTitle] = useState(readioMirchi.title);
+  const [artWork, setArtWork] = useState(readioMirchi.artwork);
+  const [artist, setArtist] = useState(readioMirchi.artist);
+  
   const showToast = (message) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
@@ -70,13 +74,13 @@ const App = () => {
                 source={{
                   height: 200,
                   width: 200,
-                  uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTFcNFNc0KvDR99vzYCJMSMyYRf9DNDDqZPQ&usqp=CAU',
+                  uri: artWork ,
                 }}
               />
             </View>
             <View style={{ alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontSize: 40, fontWeight: 'bold' }}>Radio Mirchi</Text>
-              <Text style={{ color: 'white', fontSize: 20, }}>98.3 FM</Text>
+              <Text style={{ color: 'white', fontSize: 40, fontWeight: 'bold' }}>{ title }</Text>
+              <Text style={{ color: 'white', fontSize: 20, }}>{artist} FM</Text>
               <Text style={{ color: 'white', fontSize: 15, }}>Playing Now</Text>
             </View>
           </View>
@@ -85,25 +89,49 @@ const App = () => {
         {/* footer */}
         <View style={styles.footer}>
 
-          <Pressable onPress={() => {
+          <Pressable onPress={ async () => {
             showToast('Play Previeus Raio');
             TrackPlayer.skipToPrevious();
+
+            let trackId = await TrackPlayer.getCurrentTrack();
+            let currentTrack = await TrackPlayer.getTrack(trackId);
+
+            setArtWork(currentTrack.artwork);
+            setTitle(currentTrack.title);
+            setArtist(currentTrack.artist);
+
           }}>
             <FontAwesome size={35} name="backward" color="white" />
           </Pressable>
 
           <Pressable onPress={async () => {
+            let state = await TrackPlayer.getState();
             showToast('Start Playing Radio');
             TrackPlayer.play();
+
+            console.log(state);
+
             let trackId = await TrackPlayer.getCurrentTrack();
-            console.log(await TrackPlayer.getTrack(trackId));
+            let currentTrack = await TrackPlayer.getTrack(trackId);
+
+            setArtWork(currentTrack.artwork);
+            setTitle(currentTrack.title);
+            setArtist(currentTrack.artist);
           }}>
 
             <FontAwesome size={60} name="pause-circle" color="white" />
           </Pressable>
-          <Pressable onPress={() => {
+          <Pressable onPress={ async () => {
             showToast('Playing Next Radio');
             TrackPlayer.skipToNext();
+
+            let trackId = await TrackPlayer.getCurrentTrack();
+            let currentTrack = await TrackPlayer.getTrack(trackId);
+
+            setArtWork(currentTrack.artwork);
+            setTitle(currentTrack.title);
+            setArtist(currentTrack.artist);
+
           }}>
             <FontAwesome size={35} name="forward" color="white" />
           </Pressable>
