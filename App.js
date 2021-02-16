@@ -1,21 +1,65 @@
 import React from 'react';
 // eslint-disable-next-line prettier/prettier
-import { StyleSheet, Text, SafeAreaView, View, Image, Pressable } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, View, Image, ToastAndroid, Pressable } from 'react-native';
+import TrackPlayer from 'react-native-track-player';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+var readioMirchi = {
+  id: '1', // Must be a string, required
+  url: 'https://radioindia.net/radio/mirchi98/icecast.audio', // Load media from the network
+
+  title: 'Radio Mirchi',
+  artist: 'Radio Mirchi',
+  album: 'Radio Mirchi',
+  genre: 'Progressive House, Electro House',
+  date: '2014-05-20T07:00:00+00:00', // RFC 3339
+  // Load artwork from the network
+  artwork: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTFcNFNc0KvDR99vzYCJMSMyYRf9DNDDqZPQ&usqp=CAU',
+};
+
+var bigFm = {
+  id: '2', // Must be a string, required
+  url: 'https://radioindia.net/radio/sc-bb/icecast.audio', // Load media from the network
+
+  title: 'Big Fm',
+  artist: 'Big Fm',
+  album: 'Big Fm',
+  genre: 'Progressive House, Electro House',
+  date: '2014-05-20T07:00:00+00:00', // RFC 3339
+  // Load artwork from the network
+  artwork: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTR6Qlqftasp7LaIJJIWmSwu0IJI-dWSpfxw&usqp=CAU',
+};
+
+TrackPlayer.add([readioMirchi, bigFm]).then(function () {
+  // The tracks were added
+  console.log('Song Added');
+});
+
 const App = () => {
+
+  const showToast = (message) => {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.mainView}>
         {/* Header Section */}
         <View style={styles.header}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: '5%' }}>
+
             <FontAwesome size={35} name="list-alt" color="white" />
-            <FontAwesome size={35} name="pause-circle" color="white" />
+            <Pressable onPress={() => {
+              showToast("Radio Stop");
+              TrackPlayer.stop();
+            }}>
+              <FontAwesome size={35} name="stop-circle" color="white" />
+            </Pressable>
           </View>
 
           <Text style={{ alignSelf: 'center', marginTop: 15, fontSize: 40, color: 'white', fontWeight: 'bold' }}>Radio App</Text>
+          <Text style={{ alignSelf: 'center', marginTop: 5, fontSize: 10, color: 'white' }}>Developed by J@s</Text>
         </View>
 
         {/* Body */}
@@ -40,11 +84,29 @@ const App = () => {
 
         {/* footer */}
         <View style={styles.footer}>
-          <Pressable onPress={() => console.log('welcome')}>
+
+          <Pressable onPress={() => {
+            showToast('Play Previeus Raio');
+            TrackPlayer.skipToPrevious();
+          }}>
             <FontAwesome size={35} name="backward" color="white" />
           </Pressable>
-          <FontAwesome size={60} name="pause-circle" color="white" />
-          <FontAwesome size={35} name="forward" color="white" />
+
+          <Pressable onPress={async () => {
+            showToast('Start Playing Radio');
+            TrackPlayer.play();
+            let trackId = await TrackPlayer.getCurrentTrack();
+            console.log(await TrackPlayer.getTrack(trackId));
+          }}>
+
+            <FontAwesome size={60} name="pause-circle" color="white" />
+          </Pressable>
+          <Pressable onPress={() => {
+            showToast('Playing Next Radio');
+            TrackPlayer.skipToNext();
+          }}>
+            <FontAwesome size={35} name="forward" color="white" />
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>
