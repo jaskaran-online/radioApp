@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,15 +8,15 @@ import {
   Pressable,
   Animated,
   Easing,
-} from "react-native";
-import TrackPlayer from "react-native-track-player";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+} from 'react-native';
+import TrackPlayer from 'react-native-track-player';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { readioMirchi, bigFm } from "./app/RadioChannels";
+import {readioMirchi, bigFm} from './app/RadioChannels';
 
 TrackPlayer.add([readioMirchi, bigFm]).then(function () {
   // The tracks were added
-  console.log("Tracks Added");
+  console.log('Tracks Added');
 });
 
 const App = () => {
@@ -69,10 +69,10 @@ const App = () => {
 
   const rotateData = rotateValueHolder.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
+    outputRange: ['0deg', '360deg'],
   });
 
-  !isSongPlay ? startImageRotateFunction() : "";
+  !isSongPlay ? startImageRotateFunction() : '';
 
   return (
     <SafeAreaView>
@@ -81,18 +81,16 @@ const App = () => {
         <View style={styles.header}>
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              padding: "5%",
-            }}
-          >
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              padding: '5%',
+            }}>
             <FontAwesome size={35} name="list-alt" color="white" />
             <Pressable
               onPress={() => {
                 TrackPlayer.stop();
                 setStatus(false);
-              }}
-            >
+              }}>
               <FontAwesome size={35} name="stop-circle" color="white" />
             </Pressable>
           </View>
@@ -100,12 +98,11 @@ const App = () => {
           <Text style={styles.AppTitle}>Radio App</Text>
           <Text
             style={{
-              alignSelf: "center",
+              alignSelf: 'center',
               marginTop: 5,
               fontSize: 10,
-              color: "white",
-            }}
-          >
+              color: 'white',
+            }}>
             Developed by Jaskaran Singh
           </Text>
         </View>
@@ -118,7 +115,7 @@ const App = () => {
                 style={{
                   width: 200,
                   height: 200,
-                  transform: [{ rotate: rotateData }],
+                  transform: [{rotate: rotateData}],
                 }}
                 source={{
                   height: 200,
@@ -127,11 +124,11 @@ const App = () => {
                 }}
               />
             </View>
-            <View style={{ alignItems: "center" }}>
+            <View style={{alignItems: 'center'}}>
               <Text style={styles.ChanelTitle}>{title}</Text>
               <Text style={styles.chanelNumber}>{artist} FM</Text>
-              <Text style={{ color: "white", fontSize: 15 }}>
-                {isSongPlay ? "Paused" : "Playing Now"}
+              <Text style={{color: 'white', fontSize: 15}}>
+                {isSongPlay ? 'Paused' : 'Playing Now'}
               </Text>
             </View>
           </View>
@@ -146,7 +143,7 @@ const App = () => {
           <Pressable onPress={playPauseChanel}>
             <FontAwesome
               size={60}
-              name={isSongPlay ? "play-circle" : "pause-circle"}
+              name={isSongPlay ? 'play-circle' : 'pause-circle'}
               color="white"
             />
           </Pressable>
@@ -163,56 +160,56 @@ export default App;
 
 const styles = StyleSheet.create({
   mainView: {
-    height: "100%",
-    backgroundColor: "#4b014b",
+    height: '100%',
+    backgroundColor: '#4b014b',
   },
   header: {
-    width: "100%",
-    height: "25%",
-    backgroundColor: "#e1e1e12e",
+    width: '100%',
+    height: '25%',
+    backgroundColor: '#e1e1e12e',
     padding: 20,
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
   },
   body: {
-    height: "50%",
+    height: '50%',
     padding: 20,
   },
   footer: {
-    flexDirection: "row",
-    height: "25%",
-    backgroundColor: "#e1e1e12e",
-    padding: "18%",
+    flexDirection: 'row',
+    height: '25%',
+    backgroundColor: '#e1e1e12e',
+    padding: '18%',
     borderTopLeftRadius: 80,
     borderTopRightRadius: 80,
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   ChanelTitle: {
-    color: "white",
+    color: 'white',
     fontSize: 40,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
-  chanelNumber: { color: "white", fontSize: 20 },
+  chanelNumber: {color: 'white', fontSize: 20},
   bodyContainer: {
     flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "space-evenly",
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
   chanelDetailSection: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 200,
     width: 200,
-    overflow: "hidden",
+    overflow: 'hidden',
     borderRadius: 100,
   },
   AppTitle: {
-    alignSelf: "center",
+    alignSelf: 'center',
     marginTop: 15,
     fontSize: 40,
-    color: "white",
-    fontWeight: "bold",
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
